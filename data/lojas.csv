@@ -1,0 +1,22 @@
+﻿loja_id,nome,cidade,distrito,regiao,tipo
+1,TechSolutions Online,Online,Online,Online,Online
+2,TechSolutions Porto Centro,Porto,Porto,Norte,Física
+3,TechSolutions Porto NorteShopping,Porto,Porto,Norte,Física
+4,TechSolutions Porto Boavista,Porto,Porto,Norte,Física
+5,TechSolutions Lisboa Amoreiras,Lisboa,Lisboa,Lisboa,Física
+6,TechSolutions Lisboa Colombo,Lisboa,Lisboa,Lisboa,Física
+7,TechSolutions Lisboa Vasco da Gama,Lisboa,Lisboa,Lisboa,Física
+8,TechSolutions Braga,Braga,Braga,Norte,Física
+9,TechSolutions Coimbra,Coimbra,Coimbra,Centro,Física
+10,TechSolutions Aveiro,Aveiro,Aveiro,Centro,Física
+11,TechSolutions Faro,Faro,Faro,Algarve,Física
+12,TechSolutions Setúbal,Setúbal,Setúbal,Lisboa,Física
+13,TechSolutions Leiria,Leiria,Leiria,Centro,Física
+14,TechSolutions Viseu,Viseu,Viseu,Centro,Física
+15,TechSolutions Évora,Évora,Évora,Alentejo,Física
+16,TechSolutions Guimarães,Guimarães,Braga,Norte,Física
+17,TechSolutions Funchal,Funchal,Madeira,Madeira,Física
+18,TechSolutions Ponta Delgada,Ponta Delgada,Açores,Açores,Física
+19,TechSolutions Portimão,Portimão,Faro,Algarve,Física
+20,TechSolutions Vila Real,Vila Real,Vila Real,Norte,Física
+21,TechSolutions Santarém,Santarém,Santarém,Centro,Física
