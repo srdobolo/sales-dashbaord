@@ -18,14 +18,25 @@ CREATE TABLE dw.DIM_DATA (
     dia_semana  VARCHAR(15) NOT NULL
 );
 
+WITH todas_as_datas AS (
+    SELECT v.data_venda AS data_ref
+    FROM staging.vendas AS v
+    WHERE v.data_venda IS NOT NULL
+
+    UNION
+
+    SELECT c.data_registo
+    FROM staging.clientes AS c
+    WHERE c.data_registo IS NOT NULL
+)
 INSERT INTO dw.DIM_DATA (data, ano, trimestre, mes, dia_semana)
 SELECT DISTINCT
-       v.data_venda,
-       YEAR(v.data_venda),
-       CONCAT('T', DATEPART(QUARTER, v.data_venda)),
-       DATENAME(MONTH, v.data_venda),
-       DATENAME(WEEKDAY, v.data_venda)
-FROM staging.vendas AS v;
+       d.data_ref,
+       YEAR(d.data_ref),
+       CONCAT('T', DATEPART(QUARTER, d.data_ref)),
+       DATENAME(MONTH, d.data_ref),
+       DATENAME(WEEKDAY, d.data_ref)
+FROM todas_as_datas AS d;
 
 CREATE TABLE dw.DIM_LOJA (
     loja_id   INT PRIMARY KEY,
@@ -46,7 +57,9 @@ CREATE TABLE dw.DIM_CLIENTE (
     genero        CHAR(1)      NULL,
     loja_id       INT          NULL,
     faixa_etaria  VARCHAR(20)  NOT NULL,
-    data_registo  DATE         NULL
+    data_registo  DATE         NULL,
+    CONSTRAINT FK_DIM_CLIENTE_DATA_REGISTRO FOREIGN KEY (data_registo)
+        REFERENCES dw.DIM_DATA(data)
 );
 
 WITH clientes_union AS (
