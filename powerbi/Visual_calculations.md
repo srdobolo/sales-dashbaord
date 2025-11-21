@@ -32,16 +32,50 @@ SUMMARIZE('dw DIM_PRODUTO','dw DIM_PRODUTO'[produto_id],'dw DIM_PRODUTO'[nome])
 ### Medida
 
 ```dax
-Purchased Both Products = 
-VAR InitialPurchase = VALUES('dw DIM_CLIENTE'[cliente_id])
-VAR ComparisonPurchase = CALCULATETABLE(VALUES('dw DIM_CLIENTE'[cliente_id]), ALL('dw DIM_PRODUTO'),
-TREATAS(VALUES('Comparison Products'[Index]),'dw FACT_VENDAS'[produto_id]))
+Purchased Both Products (Cell) = 
+VAR ProdutoLinha  = SELECTEDVALUE('dw DIM_PRODUTO'[produto_id])
+VAR ProdutoColuna = SELECTEDVALUE('Comparação Produtos'[produto_id])
+VAR TransacoesLinha =
+    CALCULATETABLE(
+        VALUES('dw FACT_VENDAS'[transacao_id]),
+        'dw FACT_VENDAS',
+        'dw DIM_PRODUTO'[produto_id] = ProdutoLinha
+    )
+VAR TransacoesColuna =
+    CALCULATETABLE(
+        VALUES('dw FACT_VENDAS'[transacao_id]),
+        TREATAS({ProdutoColuna}, 'dw DIM_PRODUTO'[produto_id])
+    )
 RETURN
-IF(SELECTEDVALUE('dw DIM_PRODUTO'[nome]) = SELECTEDVALUE('Comparison Products'[Comparison Product]),
-BLANK(),
-COUNTROWS(INTERSECT(InitialPurchase,ComparisonPurchase)))
+IF(
+    HASONEVALUE('dw DIM_PRODUTO'[produto_id]) &&
+    HASONEVALUE('Comparação Produtos'[produto_id]) &&
+    ProdutoLinha <> ProdutoColuna,
+    COUNTROWS(INTERSECT(TransacoesLinha, TransacoesColuna))
+)
 ```
 
+```dax
+Purchased Both Products = 
+VAR Result =
+    IF(
+        ISINSCOPE('dw DIM_PRODUTO'[produto_id]) &&
+        ISINSCOPE('Comparação Produtos'[produto_id]),
+        [Purchased Both Products (Cell)],
+        SUMX(
+            SUMMARIZECOLUMNS(
+                'dw DIM_PRODUTO'[produto_id],
+                'Comparação Produtos'[produto_id]
+            ),
+            [Purchased Both Products (Cell)]
+        )
+    )
+RETURN Result
+```
+
+https://www.youtube.com/watch?v=VE0V_WhzFOI
+
+https://www.youtube.com/watch?v=iZJz30LSik4
 
 ## Cohort
 
