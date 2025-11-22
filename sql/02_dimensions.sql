@@ -47,6 +47,10 @@ CREATE TABLE dw.DIM_LOJA (
     tipo      NVARCHAR(30)  NOT NULL
 );
 
+-- Linha de "Desconhecido" para lidar com clientes sem loja associada
+INSERT INTO dw.DIM_LOJA (loja_id, nome, cidade, distrito, regiao, tipo)
+VALUES (0, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido');
+
 INSERT INTO dw.DIM_LOJA
 SELECT DISTINCT
        loja_id, nome, cidade, distrito, regiao, tipo
@@ -114,14 +118,14 @@ INSERT INTO dw.DIM_CLIENTE (
 SELECT DISTINCT
        cu.cliente_id,
        cu.nome,
-        cu.email,
-        cu.telefone,
+       cu.email,
+       cu.telefone,
        cu.genero,
-       cu.loja_id,
-       l.cidade,
-       l.distrito,
-       l.regiao,
-       l.tipo AS tipo_loja,
+       COALESCE(cu.loja_id, 0) AS loja_id,
+       COALESCE(l.cidade, 'Desconhecido') AS cidade,
+       COALESCE(l.distrito, 'Desconhecido') AS distrito,
+       COALESCE(l.regiao, 'Desconhecido') AS regiao,
+       COALESCE(l.tipo, 'Desconhecido') AS tipo_loja,
        CASE
             WHEN cu.idade IS NULL THEN 'Desconhecido'
             WHEN cu.idade < 25 THEN '<25'
@@ -133,8 +137,8 @@ SELECT DISTINCT
        END AS faixa_etaria,
        cu.data_registo
 FROM clientes_union AS cu
-LEFT JOIN staging.lojas AS l
-       ON l.loja_id = cu.loja_id;
+LEFT JOIN dw.DIM_LOJA AS l
+       ON l.loja_id = COALESCE(cu.loja_id, 0);
 
 CREATE TABLE dw.DIM_PRODUTO (
     produto_id        INT PRIMARY KEY,

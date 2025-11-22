@@ -95,3 +95,5 @@ Entidades principais e relacionamentos (cardinalidade 1:N):
 1. Automatizar o pipeline num *Makefile* ou workflow CI/CD (`docker compose up`, ingestão, execução de scripts SQL).  
 2. Adicionar testes ou validações automáticas (contagens de linhas, checksums) após cada etapa do ETL.  
 3. Expandir o modelo com fatos agregados diários e dimensões adicionais (ex.: campanhas, canais de venda) caso o negócio cresça.
+## Views adicionadas
+- `dw.vw_cliente_loja`: junta `dw.DIM_CLIENTE` com `dw.DIM_LOJA` via `loja_id`, expondo `cliente_id`, `genero`, `loja_id`, `faixa_etaria`, `data_registo`, `loja_nome`, `cidade`, `distrito`, `regiao`, `tipo` para consumo direto em dashboards ou queries ad-hoc.
